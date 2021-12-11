@@ -50,3 +50,17 @@ pip freeze > requirements.txt
 ````
 pip install -r requirements.txt
 ````
+
+# to push the change
+````
+git add --all
+````
+````
+git commit -m "added procfile"
+````
+````
+git push origin main
+````
+````
+git push heroku main
+````

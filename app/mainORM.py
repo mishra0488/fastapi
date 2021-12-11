@@ -15,6 +15,9 @@ app.include_router(auth.router)
 app.include_router(vote.router)
 
 
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
 
 
 
