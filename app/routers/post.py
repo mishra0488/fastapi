@@ -15,16 +15,17 @@ router = APIRouter(
 
 
 # getting all posts
-@router.get("/", response_model=List[PostResponse])
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user),
 limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    #posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     # if you want to show only users posts and not others posts to user , then use below line
     #posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
 
     # below query to show vote counts in response for perticular posts
     # left join query to join the tables and counts the votes on posts
-    #posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     
     return posts
 
@@ -41,9 +42,14 @@ def create_posts(post: CreatePost, db: Session = Depends(get_db), current_user: 
 
 
 # getting single post
-@router.get("/{id}", response_model=PostResponse)
+@router.get("/{id}", response_model=PostOut)
 def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    #post = db.query(models.Post).filter(models.Post.id == id).first()
+    
+    # below query to show vote counts in response for perticular posts
+    # left join query to join the tables and counts the votes on posts
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("likes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
     

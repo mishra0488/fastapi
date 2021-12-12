@@ -40,13 +40,13 @@ class PostResponse(Post): # inherating title content and published field already
         orm_mode = True
 
 
-class PostOut(Post):
+
+class PostOut(BaseModel):
     Post: PostResponse
-    votes: int
+    likes: int
 
     class Config:
         orm_mode = True
-
 # --------------------------------------------------------------------------------------------------
 
 class CreateUser(BaseModel):

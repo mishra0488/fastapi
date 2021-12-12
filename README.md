@@ -38,6 +38,17 @@ alembic init alembic
 ````
 # after this we need to import base from database to alembic env file
 # and in .ini file update sqlalchemyurl path
+````
+alembic revision -m "create post table"
+````
+
+````
+alembic upgrade revision_number
+````
+
+````
+alembic downgrade revision_number
+````
 
 # CORS(cross origin resource sharing) allows to make requests from a web browser on one domain to a server on diff domain
 # by default our APi will only allow web browser running on same domainas our server to make request to it.
@@ -63,4 +74,8 @@ git push origin main
 ````
 ````
 git push heroku main
+````
+# if anything in alembic database file
+````
+heroku run alembic upgrade head
 ````
