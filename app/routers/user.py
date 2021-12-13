@@ -3,6 +3,7 @@ from .. import models, utils
 from ..schemas import Post, CreatePost, UpdatePost, PostResponse, CreateUser, UserOut
 from sqlalchemy.orm import Session
 from ..database import get_db
+from typing import List, Optional
 
 
 router = APIRouter(
@@ -31,3 +32,11 @@ def get_user(id: int, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with id: {id} does not exist")
     return user
+
+
+#get all user
+@router.get("/", response_model=List[UserOut])
+def get_users(db: Session = Depends(get_db), search: Optional[str] = ""):
+    users = db.query(models.User).filter(models.User.email.contains(search)).all()
+    
+    return users
