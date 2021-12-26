@@ -79,3 +79,75 @@ git push heroku main
 ````
 heroku run alembic upgrade head
 ````
+
+# loading application on ubuntu 
+````
+sudo apt update && sudo apt upgrade -y
+````
+````
+sudo apt install python
+````
+````
+sudo apt install python3-pip
+````
+````
+sudo pip3 install virtualenv
+````
+# install postgres on ubuntu virtual machine
+````
+sudo apt install postgresql postgresql-contrib -y
+````
+# local - authentication - connecting ubuntu with postgres
+# postgres has created a local user on ubuntu vm i.e. postgres. so first change the user from root to postgres
+````
+su - postgres
+````
+# now can login to database, here username = ppstgres
+````
+psql -U <provide username>
+````
+# now provide password to the user
+````
+\password postgres
+````
+# enter the password
+# now if exit from postgres login 
+````
+\q
+````
+# to roor user
+````
+exit
+````
+# now move to installed packages folder
+````
+cd /etc/postgresql/<provide version of postgres>/main
+````
+# now open postgresql.conf file
+````
+sudo vi postgresql.conf
+````
+# go to connection and authentication in file and under connection settings write below one
+# listen_address = '*'
+# * if you want to connect from any machine or the ip address of specific
+# now go to other file
+````
+sudo vi pg_hba.conf
+````
+# under heading database administrative change peer to md5
+# under local if for unix change peer to md5
+# under IPv4 change address to 0.0.0.0/0
+# under IPv6 change address to ::/0, now save and exit file
+# reastart 
+````
+systemctl restart postgresql
+````
+# create the new user other than root(security issue)
+````
+adduser vikas
+````
+# it will ask for password, provide password(new)
+````
+su - vikas
+````
+ 
